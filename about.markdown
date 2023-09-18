@@ -4,11 +4,8 @@ title: About
 permalink: /about/
 ---
 
-This blog is a place for me to publicly document the process of building certain projects based on topics I enjoy. Hopefully the contents of this website can be useful to others.
+This blog is a place for me to publicly document the process of building projects I enjoy. Hopefully the contents of this website can also be useful to others.
 
 This website was made using jekyll and a custom theme based on jekyll minima.
 
----
-
-<br>
-P.S. I also just enjoy creating nice looking things.
+My GitHub is here [https://github.com/jmdevy](https://github.com/jmdevy){:target="_blank"}{:rel="noopener noreferrer"} and my email address is marcumjp at gmail.com
