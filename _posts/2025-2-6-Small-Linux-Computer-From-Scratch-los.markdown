@@ -6,19 +6,22 @@ categories: jekyll update
 ---
 
 
-<br>
+<style>
+    /* Code block background */
+    .highlighter-rouge .highlight {
+        background: black;
+    }
+</style>
 
 
 ## **Introduction**
 This article will go through every topic related to developing an embedded Linux product from scratch.
 
-Typically, hardware development blogs only go over high level concepts, like in the below posts, but I'm going to go over every last detail.
+Typically, hardware development blogs only go over high level concepts, like in the below posts, but I'm going to go over every last detail. However, it is expected that you have basic electrical engineering, Linux, product development, mechanical, and software engineering knowledge.
 
 * [Type 1 diabetes watch](https://andrewchilds.com/posts/building-a-t1d-smartwatch-from-scratch)
 * [Laptop from scratch](https://www.byran.ee/posts/creation/)
 * [Fluid simulation pendant](https://mitxela.com/projects/fluid-pendant)
-
-However, it is expected that you have basic electrical engineering, Linux, product development, mechanical, and software engineering knowledge.
 
 ~ _this is going to be a long one... Please understand that not everything I say in this blog may be completely accurate, especially in the future when it could be out of date._
 
@@ -78,20 +81,91 @@ This is the hardest part! These are some of key attributes you need to look at f
 <br>
 
 
-# **Setting Up an ERP**
-What is an **ERP**? It stands for [Enterprise Resource Planning](https://en.wikipedia.org/wiki/Enterprise_resource_planning) and is a software that handles lots of different aspects of running a company.
-
-For us though, since we're just getting started building products and maybe don't have a company, we'll be using an ERP system for keeping track of parts and handling ordering of those parts.
+# **ERP**
+What is an **ERP**? It stands for [Enterprise Resource Planning](https://en.wikipedia.org/wiki/Enterprise_resource_planning) and is a software that handles lots of different aspects of running a company. For someone designing a product, an ERP system is used for keeping track of parts and handling ordering of those parts.
 
 For example, say we have a product with a screen, battery, electrical components, plastic enclosure, etc. Where do you keep the information about each component, it's price, manufacturer, availability, how to order it, etc? It would be nice to keep all that information in some kind of central database, right? That's one aspect of what ERP software can do.
 
-There are lots of different commercial and open-source projects, here's some of those:
-* 
+There are lots of different commercial and open-source projects that you'll find on Google, but we won't use one for our one-off project.
 
 <br>
 
 
 # **Setting Up KiCAD**
+If you're not familiar, KiCAD is a computer assisted design (CAD) electronic design automation (EDA) software (sometimes referred to as ECAD). At a high-level, KiCAD let's you design the connections of components (in a schematic) and the position and layout the components on a board (printed circuit board (PCB) design).
+
+You create representations of components in the schematic called **symbols**. After creating or getting symbols for the components, you use wires to connect pins of components/symbols to other components/symbols.
+
+Typically, as you're designing major parts of a schematic, you'll also start making or collecting representations of the physical components in a 2D format as a **footprint**. Footprints as placed on a 2D outline of the physical PCB and the wire connections from the schematic are physically routed on the board.
+
+The hard part that no one mentions is what does it actually look like to create, get, and use symbols or footprints in KiCAD. How do I order components and PCBs that I design if I use someone elses symbols or footprints? How should I organize my own custom libraries of symbols and footprints?
+
+#### **Installing KiCAD**
+Visit the [download](https://www.kicad.org/download/) page and grab the latest release, Run the installer.
+
+You might also want a new theme that doesn't burn your eyes. As this [forum post](https://forum.kicad.info/t/kicad-7-colors-and-themes/44524/2) mentions, do the following:
+1. Open KiCAD to the main project selection screen
+2. Click "Project and Content Manager"
+3. Click the "Color Themes" tab
+4. Click "Install" on the themes you like (I use "Monokai High Contrast")
+5. Click "Apply Pending Changes"
+6. Go to `Preferences -> Preferences`
+    1. `Symbol Editor -> Colors -> Use Theme -> Monokai High Contrast`
+    2. `Schematic Editor -> Colors -> Theme -> Monokai High Contrast`
+    3. `Footprint Editor -> Colors -> Theme -> Monokai High Contrast`
+    4. `PCB Editor -> Colors -> Theme -> Monokai High Contrast`
+    5. `Gerber Viewer -> Colors -> Theme -> Monokai High Contrast`
+    6. Click "OK"
+
+#### **Libraries**
+KiCAD comes with pre-made global libraries for all sorts of component types and manufacture symbols and footprints (yes, there are separate libraries for each). The problem is that as KiCAD updates, so do the libraries. It will try and help you copy over old library components, but this can be a mess. Instead, we'll create our own libraries for symbols and footprints. If we find a symbol or footprint in the default KiCAD libraries, we'll copy them to our own library.
+
+##### **Custom Library Structure**
+We want to create separate parent directories for each type of component (or however you want to separate everything). Inside each parent, we'll have three separate folders and libraries, for footprints, 3D models, and symbols. For example:
+
+
+```
+components
++-- components_modules
+|   +-- footprints
+|   +-- models
+|   +-- symbols
++-- components_mpus
+|   +-- footprints
+|   +-- models
+|   +-- symbols
++-- components_switches
+|   +-- footprints
+|   +-- models
+|   +-- symbols
++-- components_resistors
+|   +-- footprints
+|   +-- models
+|   +-- symbols
++-- components_capacitors
+|   +-- footprints
+|   +-- models
+|   +-- symbols
++-- components_inductors
+|   +-- footprints
+|   +-- models
+|   +-- symbols
++-- components_ldo
+|   +-- footprints
+|   +-- models
+|   +-- symbols
+
+etc...
+```
+
+Pay attention to the following in the above structure:
+* **Folder names:** prepend each folder with a common word like `components`. For example, everywhere you see `components` above, you could replace that word with `mylibrary`. Using a common word makes it a lot easier to search for and use your libraries within KiCAD
+* **Structure:** Have a very upper level folder (e.g. `components`) that will the sub-libraries folders live in (e.g. `components_modules`). We'll want to commit this to git and push it to GitHub to have version control across our library.
+
+There's some discussion [here](https://www.reddit.com/r/KiCad/comments/1eiai3t/new_libraries_or_append_to_default_libs/?rdt=35828) and [here](https://forum.kicad.info/t/copying-symbols-and-footprints-to-personal-libraries/49965/3) about why you might choose a structure like the above.
+
+##### **Creating a KiCAD Project and Custom Library**
+Here's a step-by-step walkthrough of creating a KiCAD project and one of the libraries above (e.g. `components_mpus`).
 
 
 <br>
@@ -156,12 +230,29 @@ https://www.espressif.com/en/products/socs#:~:text=ESP32%2DP4.asc-,ESP32%2DS%20S
 <br>
 
 
-## **Starting the KiCad library**
-Most tutorials don't explain how they manage their part libraries. There are lots of differing opinions on how this should be done. Apart from the electrical engineering part (which isn't very hard for an SoC with integrated RAM), you'll run into the following starting issues when building your own hardware:
+## **Choosing a Keyboard Module**
 
-* Q. Where do I get component schematic symbols?
-    * A. You make them...
-* Q. Where do I get component footprints?
-    * A. You make them...
-* Q. Where do I get component 3D models?
-    * A. You make them...
+
+<br>
+
+
+## **Choosing Buttons & Switches**
+
+
+<br>
+
+
+## **Choosing Joysticks**
+
+
+<br>
+
+
+## **Designing an Enclosure**
+We'll ultimately 3D print the enclosure, but it is always a good idea to start the design with the intention that we're going to injection mold it.
+
+The below resources are pure gold for how to design parts for injection molding. We'll be following these religiously.
+
+* [**Part and Mold Design**](https://web.archive.org/web/20240531004633/https://kompozit.org.tr/wp-content/uploads/2021/11/A_Design_Guide_Part_and_Mold_Design_Engi.pdf){:target="_blank"}{:rel="noopener noreferrer"}
+* [**Snap-Fit Joints for Plastics**](https://web.archive.org/web/20230816100057/https://fab.cba.mit.edu/classes/S62.12/people/vernelle.noel/Plastic_Snap_fit_design.pdf){:target="_blank"}{:rel="noopener noreferrer"}
+* [**Engineering Plastics Joining Techniques**](https://web.archive.org/web/20230602222325/https://techcenter.lanxess.com/scp/americas/en/docguard/Joining_Guide.pdf?docId=77016){:target="_blank"}{:rel="noopener noreferrer"}
