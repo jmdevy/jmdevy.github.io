@@ -59,6 +59,7 @@ There are a lot of resources on building Linux for resource constrained devices.
 * [https://popovicu.com/posts/making-a-micro-linux-distro/](https://popovicu.com/posts/making-a-micro-linux-distro/)
 * [https://popovicu.com/posts/789-kb-linux-without-mmu-riscv/](https://popovicu.com/posts/789-kb-linux-without-mmu-riscv/)
 * [https://blinry.org/tiny-linux/](https://blinry.org/tiny-linux/)
+* [https://news.ycombinator.com/item?id=43131902](https://news.ycombinator.com/item?id=43131902)
 
 Now, there's one more distinction that needs to be made. Linux is the primary software core/abstraction called the **kernal** that implements a generic interface/libraries we can use to create software that a user will actually find interesting. For example, by default Linux doesn't come with any kind of desktop environment, file manager, web browser, or email client, etc. All you start with if you build the Linux kernal is, hopefully, a UART I/O connection and a shell.
 
