@@ -88,6 +88,7 @@ For example, say we have a product with a screen, battery, electrical components
 
 There are lots of different commercial and open-source projects that you'll find on Google, but we won't use one for our one-off project.
 
+
 <br>
 
 
@@ -98,10 +99,14 @@ You create representations of components in the schematic called **symbols**. Af
 
 Typically, as you're designing major parts of a schematic, you'll also start making or collecting representations of the physical components in a 2D format as a **footprint**. Footprints as placed on a 2D outline of the physical PCB and the wire connections from the schematic are physically routed on the board.
 
-The hard part that no one mentions is what does it actually look like to create, get, and use symbols or footprints in KiCAD. How do I order components and PCBs that I design if I use someone elses symbols or footprints? How should I organize my own custom libraries of symbols and footprints?
+You'll also want to grab and make **3D Models** for each component at the footprint level. KiCAD will let you export 3D STEP files of you board that you can then use to design enclosures around.
+
+The hard part, that no one mentions, is what does it actually look like to create, get, and use symbols, footprints, and 3D models in KiCAD. How do I order components and PCBs that I design if I use someone elses symbols or footprints? How should I organize my own custom libraries of symbols and footprints?
+
+Well, let's go through each step.
 
 #### **Installing KiCAD**
-Visit the [download](https://www.kicad.org/download/) page and grab the latest release, Run the installer.
+Visit the [download](https://www.kicad.org/download/) page and grab the latest release, run the installer.
 
 You might also want a new theme that doesn't burn your eyes. As this [forum post](https://forum.kicad.info/t/kicad-7-colors-and-themes/44524/2) mentions, do the following:
 1. Open KiCAD to the main project selection screen
@@ -164,26 +169,63 @@ Pay attention to the following in the above structure:
 
 There's some discussion [here](https://www.reddit.com/r/KiCad/comments/1eiai3t/new_libraries_or_append_to_default_libs/?rdt=35828) and [here](https://forum.kicad.info/t/copying-symbols-and-footprints-to-personal-libraries/49965/3) about why you might choose a structure like the above.
 
-##### **Creating a KiCAD Project and Custom Library**
-Here's a step-by-step walkthrough of creating a KiCAD project and one of the libraries above (e.g. `components_mpus`).
+#### **Creating a KiCAD Project and Custom Symbol Library**
+Open the below dropdown for a quick walkthrough of creating a new KiCAD project and symbol library for the schematic.
+
+<details style="margin-bottom:15px">
+    <summary><i><b>Walkthrough #1: KiCAD Project and Symbol Library Creation Walkthrough</b></i></summary>
+
+    <b>1.</b> Open KiCAD
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/1_kicad_open.png"/>
+    </div>
+    <center><i>Figure 1: KiCAD Main Page</i></center>
+    <br>
+
+    <b>2.</b> Create a new project (store it anywhere and name it anything you want, I'll be using the name `lo`)
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/2_kicad_new_project.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/3_kicad_project.png"/>
+    </div>
+    <center><i>Figure 2: KiCAD Main Page Dropdown and Created Project</i></center>
+    <br>
+
+    <b>3.</b> Click the "Schematic Editor" icon to open the project schematic
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/4_schematic_icon.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/5_schematic.png"/>
+    </div>
+    <center><i>Figure 3: KiCAD Main Page Schematic Icon and Project Schematic</i></center>
+    <br>
+
+    <b>4.</b> Click the "Symbol Editor" button
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/6_symbol_editor_button.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/7_symbol_editor.png"/>
+    </div>
+    <center><i>Figure 4: KiCAD Schematic Page Symbol Editor Button and Symbol Editor</i></center>
+    <br>
+
+    <b>5.</b> Do <i>File -> New Library -> Global -> Navigate/create "components/components_resistors/symbols/components_resistors.kicad_sym" folder</i>
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/8_new_library_file.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/9_new_library.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/10_new_library_global_ok.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/11_new_library_created.png"/>
+    </div>
+    <center><i>Figure 6: After Creating Folders and Choosing Location & Name, Library is Created</i></center>
+    <br>
+
+</details>
+
+We'll use **Walkthrough #1** many times to create libraries for other components types. As we'll see when choosing the processor, next.
 
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 
 
 ## **Choosing a Processor**
-Before we start anything (software, other components, KiCad library), we need a processor. Here's my justifications for most attributes you decide on when choosing a microprocessor SoC:
+We need a processor. Here's my justifications for most attributes you can decide on when choosing a microprocessor SoC:
 
 * **Speed:** It can be slow. We aren't making a Linux tablet, I'm fine with sacrificing this for other aspects
 * **Flash:** I would prefer the SoC has integrated on-board flash memory, but external SPI flash is fine too
@@ -198,6 +240,21 @@ So how do we find it? There are a couple of good blogs about this subject (and a
 * [https://hackaday.com/2018/09/17/a-1-linux-capable-hand-solderable-processor/](https://hackaday.com/2018/09/17/a-1-linux-capable-hand-solderable-processor/)
 
 In the second link above, they mention the [**Nuvoton NUC980 series**](https://www.nuvoton.com/products/microprocessors/arm9-mpus/nuc980-industrial-control-iot-series/) processors. These are perfect. TODO: why they are perfect
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 
 
 <br>
