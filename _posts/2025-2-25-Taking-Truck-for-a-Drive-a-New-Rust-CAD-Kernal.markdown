@@ -5,6 +5,15 @@ date:   2025-2-25 00:10:00 -0500
 categories: jekyll update
 ---
 
+
+<style>
+    /* Code block background */
+    .highlighter-rouge .highlight {
+        background: black;
+    }
+</style>
+
+
 ## **Introduction**
 
 #### **What is truck?**
@@ -34,7 +43,94 @@ I just want to give it a spin. I was excited to try it out more thoroughly in a 
 <br>
 
 
-## **Installing Rust and truck**
-if you're following along, we'll need rust, download it [here](https://www.rust-lang.org/tools/install).
+## **Installing Rust**
+if you're following along, we'll need Rust, download it [here](https://www.rust-lang.org/tools/install).
 
-Next, we'll need **truck**. **truck**'s structure is split into a bunch of separate Rust creates, as documented [here](https://ricos.gitlab.io/truck-tutorial/v0.6/).
+If you have never used Rust before, you can learn about it in [**A Tour of Rust**](https://tourofrust.com/).
+
+
+<br>
+
+
+## **First truck Program**
+Next, we'll need **truck**. **truck**'s structure is split into a bunch of separate Rust creates, as documented [here](https://github.com/ricosjp/truck?tab=readme-ov-file#crates). We'll add these creates to our Rust environment. Luckily, the project has some basic tutorials and documentation we can follow starting [here](https://ricos.gitlab.io/truck-tutorial/v0.6/mesh/first-triangle.html). We'll modify it a bit to create a square:
+
+1. `cargo new --bin truck-triangle`
+2. `cd truck-triangle`
+3. `cargo add truck-meshalgo`
+4. Edit `truck-triangle/src/main.rs`
+
+```rust
+use truck_meshalgo::prelude::Point3;
+use truck_meshalgo::prelude::StandardAttributes;
+use truck_meshalgo::prelude::Faces;
+use truck_meshalgo::prelude::PolygonMesh;
+use truck_meshalgo::prelude::obj;
+
+
+/// Create a mesh representing a square
+fn main() {
+    // Create a rust growable vector array of 3D truck points: https://doc.rust-lang.org/std/macro.vec.html
+    let vertices = vec![
+        Point3::new(0.0, 0.0, 0.0),
+        Point3::new(1.0, 0.0, 0.0),
+        Point3::new(1.0, 0.0, 1.0),
+        Point3::new(0.0, 0.0, 1.0),
+    ];
+
+    // Construct face from 4 vertices: https://github.com/ricosjp/truck/blob/f4fe3a8d763b40d19ef113f4ee2e137d93d5147a/truck-polymesh/src/lib.rs#L82
+    let faces = Faces::from_iter([[0, 1, 2, 3]]);
+
+    // Store modified/non-default vertices and default UVs & normals: https://github.com/ricosjp/truck/blob/f4fe3a8d763b40d19ef113f4ee2e137d93d5147a/truck-polymesh/src/lib.rs#L46
+    let attributes = StandardAttributes {
+        vertices,
+        ..Default::default()
+    };
+    
+    // Create the polygon
+    let polygon = PolygonMesh::new(attributes, faces);
+
+    // Create file for the .obj data to be written to and write it out
+    let mut obj = std::fs::File::create("square.obj").unwrap();
+    obj::write(&polygon, &mut obj).unwrap();
+}
+```
+
+You can view the .obj file in [**Blender**](https://www.blender.org/) or [**CAD Assistant**](https://www.opencascade.com/products/cad-assistant/).
+
+<div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-25-Taking-Truck-for-a-Drive-a-New-Rust-CAD-Kernal/1_square.png"/>
+    </div>
+<center><i>Figure 1: First truck Object, a Square</i></center>
+<br>
+
+Now that we know that **truck** is working and we can create meshes, let's try some of the modeling features and make a more complex part.
+
+
+<br>
+
+
+## **Modeling With truck**
+As this [**tutorial**](https://ricos.gitlab.io/truck-tutorial/v0.6/modeling/modeling-cube.html) states, we'll need some of the other **truck** crates:
+1. `cargo add truck-modeling`
+2. `cargo add truck-stepio`
+
+Make sure to check out the tutorial above for a simple example and visualization of creating a cube.
+
+Instead of a cube, we'll create a vase. This is nice basic object to test CAD software because we want to be able to make smooth curves, not just abrupt angles. Here's a **very** crude drawing of the vase, and two ways you might create it in a typical CAD software.
+
+<div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="27%" style="margin-top:10px" src="/assets/2025-2-25-Taking-Truck-for-a-Drive-a-New-Rust-CAD-Kernal/2_vase_drawings.png"/>
+    </div>
+<center><i>Figure 2: Methods of Creating a Vase</i></center>
+<br>
+
+In the above image, the very top profile/shape is the silhouette of our completed vase from the side. **White** colors indicate complete/final generated geometry.
+
+The middle two images show a side view of what we would create in a CAD software to generate the vase. **Green** lines are profiles we would draw in a CAD software to design the general shape of the part on planes and around axes. On the bottom, the **red** lines show the direction these operations could be performed in and the **yellow** elements are datums like axes.
+
+The left side of the image shows an operation called a **loft**, or **pipe** if you use a path with it as well. 3D Geometry is created by making multiple profiles in different planes and locations potentially at various rotations as well, and then lofting through the various profiles. You can see a depiction of this operation provided by FreeCAD [**here**](https://wiki.freecad.org/PartDesign_AdditiveLoft).
+
+on the right side, this operation is called a **revolve** or **revolution** and works around a single axis to create a 3D solid. FreeCAD also has a depiction of this [**operation**](https://wiki.freecad.org/PartDesign_Revolution).
+
+Unfortunately, **truck** seems to only have single-axis linear extrude/sweep and not loft/pipe, but it does have a rotational sweep that is really just the **revolve** operation above! You can see the different types of modeling operations available in **truck** [**here**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/index.html).
