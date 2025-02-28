@@ -131,6 +131,6 @@ The middle two images show a side view of what we would create in a CAD software
 
 The left side of the image shows an operation called a **loft**, or **pipe** if you use a path with it as well. 3D Geometry is created by making multiple profiles in different planes and locations potentially at various rotations as well, and then lofting through the various profiles. You can see a depiction of this operation provided by FreeCAD [**here**](https://wiki.freecad.org/PartDesign_AdditiveLoft).
 
-on the right side, this operation is called a **revolve** or **revolution** and works around a single axis to create a 3D solid. FreeCAD also has a depiction of this [**operation**](https://wiki.freecad.org/PartDesign_Revolution).
+On the right side, this operation is called a **revolve** or **revolution** and works around a single axis to create a 3D solid. FreeCAD also has a depiction of this [**operation**](https://wiki.freecad.org/PartDesign_Revolution).
 
 Unfortunately, **truck** seems to only have single-axis linear extrude/sweep and not loft/pipe, but it does have a rotational sweep that is really just the **revolve** operation above! You can see the different types of modeling operations available in **truck** [**here**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/index.html).
