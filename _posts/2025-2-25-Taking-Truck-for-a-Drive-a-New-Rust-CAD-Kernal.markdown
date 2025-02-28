@@ -34,6 +34,8 @@ There is a long [**history**](https://news.ycombinator.com/item?id=43167865) in 
 
 There are also lots of [**closed-source projects**](https://en.wikipedia.org/wiki/Geometric_modeling_kernel) that have been around for 40+ years in some form or another.
 
+There are also programs like [OpenSCAD](https://openscad.org/) (SDF based, only meshes), [Build123](https://github.com/gumyr/build123d) (OCCT, same issues as FreeCAD), [CadQuery](https://github.com/CadQuery/cadquery) (OCCT, same issues as FreeCAD). These projects are interesting because you *script* your parts instead of interacting with and defining it through a GUI. **truck** is only different in that is a CAD kernal that (like OCCT) that happens to be easy to use by building programs in Rust, which is comparable to OpenSCAD in ease of use.
+
 If you would like to learn more about geometric modeling and the math behind it, I recommend the book [**Geometric Modeling: The mathematics of shapes**](https://www.amazon.com/Geometric-Modeling-mathematics-Nikolay-Golovanov/dp/1497473195). This book is a goldmine of resources that I haven't really ever seen before.
 
 #### **What are we doing with truck?**
@@ -134,3 +136,9 @@ The left side of the image shows an operation called a **loft**, or **pipe** if 
 On the right side, this operation is called a **revolve** or **revolution** and works around a single axis to create a 3D solid. FreeCAD also has a depiction of this [**operation**](https://wiki.freecad.org/PartDesign_Revolution).
 
 Unfortunately, **truck** seems to only have single-axis linear extrude/sweep and not loft/pipe, but it does have a rotational sweep that is really just the **revolve** operation above! You can see the different types of modeling operations available in **truck** [**here**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/index.html).
+
+
+#### **Creating the Revolve Profile**
+According the to the documentation, [**`builder::rsweep`**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/fn.rsweep.html) can use an [**`Edge`**](https://docs.rs/truck-modeling/latest/truck_modeling/topology/type.Edge.html) or a [**`Wire`**](https://docs.rs/truck-modeling/latest/truck_modeling/topology/type.Wire.html) for the sweep profile. What's the difference between the two? It looks like a **wire** can consist of many **edges**. I think we could generate an **edge** by using [**`builder::tsweep`**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/fn.tsweep.html) on a [**`Vertex`**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/fn.vertex.html) but we'll just use [**`Edge::new`**](https://docs.rs/truck-topology/0.6.0/truck_topology/struct.Edge.html#method.new).
+
+For the curvy part of the profile, we'll use the [**`building::bezier`**](https://docs.rs/truck-modeling/latest/truck_modeling/builder/fn.bezier.html) function.
