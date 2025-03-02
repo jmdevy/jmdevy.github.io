@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-
+import MeshBuilder from './mesh_builder.js';
 
 const quadSize = 1.0;
 const noiseXZScale = 0.005;
 const noiseYScale = 10.0;
-const courseDimensions = 512;
+export const courseDimensions = 512;
 const courseThicknessRadius = 15.0;
 
 
@@ -18,64 +18,20 @@ const TurfTypes = {
 }
 
 
-class MeshBuilder{
-    constructor(){
-        // Setup ThreeJS mesh
-        // https://threejs.org/docs/#api/en/objects/Mesh
-        this.geometry = new THREE.BufferGeometry();    // https://threejs.org/docs/index.html#api/en/core/BufferGeometry
-        this.vertices = [];                            // Will be made into https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array/Float32Array
-        this.colors   = [];                            // Will also be made into a Float32Array later
-        this.material = new THREE.MeshBasicMaterial({color: 0xffffff, vertexColors: true});
-    }
-
-    #addVector3Vert(v, color){
-        this.vertices.push(v.x);
-        this.vertices.push(v.y);
-        this.vertices.push(v.z);
-
-        this.colors.push(color.r);
-        this.colors.push(color.g);
-        this.colors.push(color.b);
-    }
-
-    // Adds two triangles to create a non-indexed quad
-    // Vertices are: https://threejs.org/docs/#api/en/math/Vector3
-    // Colors are:   https://threejs.org/docs/#api/en/math/Color
-    addQuad(v0, v1, v2, v3, color){
-        // Following indexing from here: https://jayelinda.com/modelling-by-numbers-part-1a/#:~:text=direction%20as%20our%20normal%20(ie.%20up)
-        // but don't use indices and just copy vertices instead
-        this.#addVector3Vert(v0, color);
-        this.#addVector3Vert(v1, color);
-        this.#addVector3Vert(v2, color);
-
-        this.#addVector3Vert(v0, color);
-        this.#addVector3Vert(v2, color);
-        this.#addVector3Vert(v3, color);
-    }
-
-    finish(){
-        this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(this.vertices), 3));
-        this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(this.colors), 3));
-        const mesh = new THREE.Mesh(this.geometry, this.material);
-        return mesh;
-    }
-};
-
-
 export default class Course{
     constructor(){
         // Setup simple-noise noise
         // https://github.com/jwagner/simplex-noise.js?tab=readme-ov-file#2d
-        this.noise = window.exports.createNoise2D();
+        this.noise = window.exports.createNoise2D(() => {return Math.random()});
         this.builder = new MeshBuilder();
         this.mesh = undefined;
-        this.courseData = [];   // Indices from `TurfTypes`
+        this.turf = [];   // Indices from `TurfTypes`
 
         this.#createCourse();
         this.#createMesh();
     }
 
-    #fillCourseDataCircle(x, z, radius, turfType){
+    #fillCourseDataCircle(x, z, radius, turfTypeIndex){
         for(let iz=-radius; iz<radius; iz++){
             for(let ix=-radius; ix<radius; ix++){
                 const distance = Math.sqrt((ix*ix) + (iz*iz));
@@ -89,21 +45,40 @@ export default class Course{
                 }
 
                 if(distance <= radius){
-                    this.courseData[parseInt(x+ix)][parseInt(z+iz)] = turfType.index;
+                    this.turf[parseInt(x+ix)][parseInt(z+iz)] = turfTypeIndex;
                 }
             }
         }
     }
 
-    #fillCourseData(turfType){
-        // Init course data
+    #fillTurf(turfType){
+        // Init turf data
         for(let i=0; i<courseDimensions; i++){
-            this.courseData.push([]);
+            this.turf.push([]);
             for(let j=0; j<courseDimensions; j++){
-                this.courseData[i].push(turfType.index); // Fill course with "rough"
+                this.turf[i].push(turfType.index); // Fill course with "rough"
             }
         }
     }
+
+
+    #outline(initialTurfTypeIndex, edgeTurfTypeIndex) {      
+        for(let x=0; x<courseDimensions; x++){
+            for(let z=0; z<courseDimensions; z++){
+                if(this.turf[x][z] != initialTurfTypeIndex){
+                    continue;
+                }
+
+                if((this.turf[x+1][z] != initialTurfTypeIndex && this.turf[x+1][z]   != edgeTurfTypeIndex) ||
+                   (this.turf[x-1][z] != initialTurfTypeIndex && this.turf[x-1][z]   != edgeTurfTypeIndex) ||
+                   (this.turf[x][z+1] != initialTurfTypeIndex && this.turf[x][z+1] != edgeTurfTypeIndex) ||
+                   (this.turf[x][z-1] != initialTurfTypeIndex && this.turf[x][z-1] != edgeTurfTypeIndex)){
+                    this.#fillCourseDataCircle(x, z, 2, edgeTurfTypeIndex)
+                }
+            }
+        }
+    }
+
 
     #generateCoursePath(x, z, iterations, sensitivity, turfType){
         // Set an initial course relative direction
@@ -114,19 +89,33 @@ export default class Course{
             x += Math.cos(courseDirection);
             z += Math.sin(courseDirection);
 
-            this.#fillCourseDataCircle(x, z, courseThicknessRadius, turfType);
+            // Adjust thickness of course as it is drawn
+            const adjustedThickness = courseThicknessRadius * (0.5 + (0.5 + 0.5*this.noise(1000, i * 0.001))) * 1.5;
 
-            // Slowing change direction of fairway
-            courseDirection += this.noise(0, i * sensitivity);
+            // Draw a circle to fill in the course
+            this.#fillCourseDataCircle(x, z, adjustedThickness, turfType.index);
+
+            // Slowly changing direction of fairway
+            courseDirection = this.noise(i * sensitivity, i * sensitivity) * 2;
         }
 
         return [x, z];
     }
 
     #createCourse(){
-        this.#fillCourseData(TurfTypes.Rough);
-        const [x, z] = this.#generateCoursePath(courseThicknessRadius*2, courseDimensions/2, 0.85 * courseDimensions, 0.000003, TurfTypes.Fairway);
-        this.#generateCoursePath(x, z, 50, 0.004, TurfTypes.Green);
+        // Fill with default data
+        this.#fillTurf(TurfTypes.Rough);
+
+        // Generate fairway
+        const fairwayStartX = courseThicknessRadius*2;
+        const fairwayStartZ = courseDimensions/2;
+
+        const [x, z] = this.#generateCoursePath(fairwayStartX, fairwayStartZ, 0.65 * courseDimensions, 0.00015, TurfTypes.Fairway);
+        this.#outline(TurfTypes.Fairway.index, TurfTypes.FairwayFringe.index);
+
+        // Generate green
+        this.#generateCoursePath(x, z, 75, 0.04, TurfTypes.Green);
+        this.#outline(TurfTypes.Green.index, TurfTypes.GreenFringe.index);
     }
 
     #createMesh(){
@@ -154,7 +143,7 @@ export default class Course{
                 const v2 = new THREE.Vector3(v2x, v2y, v2z);
                 const v3 = new THREE.Vector3(v3x, v3y, v3z);
 
-                const turfType = TurfTypes[Object.keys(TurfTypes)[this.courseData[x][z]]];
+                const turfType = TurfTypes[Object.keys(TurfTypes)[this.turf[x][z]]];
                 this.builder.addQuad(v0, v1, v2, v3, turfType.color);
             }
         }

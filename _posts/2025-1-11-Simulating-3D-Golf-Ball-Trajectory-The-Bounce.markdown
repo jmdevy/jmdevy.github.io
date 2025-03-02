@@ -62,9 +62,18 @@ We're going to need an environment that allows us to test different scenarios:
 * Bounce off of flat and inclined surfaces
 * Assortment of turfs with different friction and compliance/restitution
 
-https://jayelinda.com/modelling-by-numbers-part-1a/
+With some [help](https://jayelinda.com/modelling-by-numbers-part-1a/) and some intuition, I made the following course generator in ThreeJS. The course turf types are stored in a 2D array. Each turf can have different attributes that we'll talk about later.
 
 <center>
     <div id="simulationDiv" style="width:min-content; height:min-content; position:relative">
     </div>
 </center>
+
+
+<br>
+
+
+## **Collision**
+We'll need a way to simulate a sphere colliding with our course instead of a point, like in the last simulation. We could use a physics framework like [rapier](https://rapier.rs/), but ThreeJS provides a [raycast](https://threejs.org/docs/#api/en/objects/Mesh.raycast) method that we can use against meshes.
+
+What we'll do is that for every point in space we simulate the ball, we'll densely check in all directions of the ball if we're colliding with the course mesh within a certain radius. If we collide, we'll calculate the new direction, velocity, and spin of the ball after the collision with some type of turf.

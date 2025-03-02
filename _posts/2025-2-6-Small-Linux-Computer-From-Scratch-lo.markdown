@@ -169,17 +169,17 @@ Pay attention to the following in the above structure:
 
 There's some discussion [here](https://www.reddit.com/r/KiCad/comments/1eiai3t/new_libraries_or_append_to_default_libs/?rdt=35828) and [here](https://forum.kicad.info/t/copying-symbols-and-footprints-to-personal-libraries/49965/3) about why you might choose a structure like the above.
 
-#### **Creating a KiCAD Project and Custom Symbol Library**
-Open the below dropdown for a quick walkthrough of creating a new KiCAD project and symbol library for the schematic.
+#### **KiCAD Walkthroughs**
+There are a couple one-time and frequent tasks that will need to be performed in KiCAD throughout this blog post. The below dropdowns are collections of quick examples of how you can perform some of these tasks.
 
 <details style="margin-bottom:15px">
-    <summary><i><b>Walkthrough #1: KiCAD Project and Symbol Library Creation Walkthrough</b></i></summary>
+    <summary><i><b>Walkthrough #1: Creating a KiCAD Project</b></i></summary>
 
     <b>1.</b> Open KiCAD
     <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/1_kicad_open.png"/>
     </div>
-    <center><i>Figure 1: KiCAD Main Page</i></center>
+    <center><i>KiCAD Main Page</i></center>
     <br>
 
     <b>2.</b> Create a new project (store it anywhere and name it anything you want, I'll be using the name `lo`)
@@ -187,7 +187,19 @@ Open the below dropdown for a quick walkthrough of creating a new KiCAD project 
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/2_kicad_new_project.png"/>
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/3_kicad_project.png"/>
     </div>
-    <center><i>Figure 2: KiCAD Main Page Dropdown and Created Project</i></center>
+    <center><i>KiCAD Main Page and Created Project</i></center>
+    <br>
+
+</details>
+
+<details style="margin-bottom:15px">
+    <summary><i><b>Walkthrough #2: Creating a Custom KiCAD Symbol Library</b></i></summary>
+
+    <b>1.</b> Open KiCAD
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/3_kicad_project.png"/>
+    </div>
+    <center><i>KiCAD Main Page</i></center>
     <br>
 
     <b>3.</b> Click the "Schematic Editor" icon to open the project schematic
@@ -195,7 +207,7 @@ Open the below dropdown for a quick walkthrough of creating a new KiCAD project 
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/4_schematic_icon.png"/>
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/5_schematic.png"/>
     </div>
-    <center><i>Figure 3: KiCAD Main Page Schematic Icon and Project Schematic</i></center>
+    <center><i>KiCAD Main Page Schematic Icon and Project Schematic</i></center>
     <br>
 
     <b>4.</b> Click the "Symbol Editor" button
@@ -203,7 +215,7 @@ Open the below dropdown for a quick walkthrough of creating a new KiCAD project 
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/6_symbol_editor_button.png"/>
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/7_symbol_editor.png"/>
     </div>
-    <center><i>Figure 4: KiCAD Schematic Page Symbol Editor Button and Symbol Editor</i></center>
+    <center><i>KiCAD Schematic Page Symbol Editor Button and Symbol Editor</i></center>
     <br>
 
     <b>5.</b> Do <i>File -> New Library -> Global -> Navigate/create "components/components_resistors/symbols/components_resistors.kicad_sym" folder</i>
@@ -213,14 +225,70 @@ Open the below dropdown for a quick walkthrough of creating a new KiCAD project 
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/10_new_library_global_ok.png"/>
         <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/11_new_library_created.png"/>
     </div>
-    <center><i>Figure 6: After Creating Folders and Choosing Location & Name, Library is Created</i></center>
+    <center><i> After Creating Folders and Choosing Location & Name, Library is Created</i></center>
+    <br>
+</details>
+
+<details style="margin-bottom:15px">
+    <summary><i><b>Walkthrough #3: Creating a Custom KiCAD Symbol</b></i></summary>
+
+    <b>1.</b> Open KiCAD
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/3_kicad_project.png"/>
+    </div>
+    <center><i>KiCAD Main Page</i></center>
+    <br>
+
+    <b>2.</b> Open the "Symbol Editor" from the main page or "Schematic Editor"
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/12_symbol_editor_button.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/6_symbol_editor_button.png"/>
+    </div>
+    <center><i>KiCAD Main Page Symbol Editor Icon Button and Schematic Symbol Editor Button</i></center>
+    <br>
+
+    <b>3.</b> Select a library to add a new symbol to
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/13_select_symbol_library.png"/>
+    </div>
+    <center><i>Selecting a Symbol Library to Add a Symbol to</i></center>
+    <br>
+
+    <b>4.</b> Click <i>File -> New Symbol</i> and enter the part name and reference designator. As an example, I'll be adding the most complex part, the NUC980DR61YC Microprocessor that will mentioned more later. Reference designators are single or two character "codes" that quickly identify component types. You can find a list of designators here: <a>https://klc.kicad.org/symbol/s6/s6.1.html</a>
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/14_create_new_symbol_button.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/15_enter_symbol_part_info.png"/>
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/16_new_symbol.png"/>
+    </div>
+    <center><i>Adding a new Symbol</i></center>
+    <br>
+
+    <b>5.</b> Now it's time to get into actually drawing the symbol. The first thing to start with is creating an outline or main body of the symbol
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        
+    </div>
+    <center><i>Creating Symbol Outline</i></center>
     <br>
 
 </details>
 
-We'll use **Walkthrough #1** many times to create libraries for other components types. As we'll see when choosing the processor, next.
+<details style="margin-bottom:15px">
+    <summary><i><b>Walkthrough #4: Creating a Custom KiCAD Footprint Library and Footprint</b></i></summary>
+</details>
+
+<details style="margin-bottom:15px">
+    <summary><i><b>Walkthrough #5: Creating a Custom KiCAD Footprint</b></i></summary>
+</details> 
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 
 
