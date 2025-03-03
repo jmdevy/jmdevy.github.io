@@ -263,6 +263,15 @@ There are a couple one-time and frequent tasks that will need to be performed in
     <center><i>Adding a new Symbol</i></center>
     <br>
 
+    <b>6.</b> The first thing to do is fill in the part information field. Double left-click anywhere in the "Symbol Editor" sheet to open the dialog. This is a Microprocessor so it does not have a "value" like a capacitor or resistor would. We'll go to DigiKey and grab the datasheet, description and keywords.
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
+        <img width="90%" style="margin-top:10px" src="/assets/2025-2-6-Small-Linux-Computer-From-Scratch-lo/17_symbol_properties.png"/>
+    </div>
+    <center><i>Editing Symbol Properties</i></center>
+    <br>
+
+
+
     <b>5.</b> Now it's time to get into actually drawing the symbol. The first thing to start with is creating an outline or main body of the symbol
     <div style="width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center">
         
@@ -273,7 +282,7 @@ There are a couple one-time and frequent tasks that will need to be performed in
 </details>
 
 <details style="margin-bottom:15px">
-    <summary><i><b>Walkthrough #4: Creating a Custom KiCAD Footprint Library and Footprint</b></i></summary>
+    <summary><i><b>Walkthrough #4: Creating a Custom KiCAD Footprint Library</b></i></summary>
 </details>
 
 <details style="margin-bottom:15px">
